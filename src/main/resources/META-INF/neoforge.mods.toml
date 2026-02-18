@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+    modId="falsememory"
+    version="1.0.0"
+    displayName="A False Memory"
+    description='''
+Your world remembers everything you've done.
+And it's starting to remind you... in ways you won't like.
+
+The longer you play, the more personal it gets.
+Your past comes back. Subtly. Insidiously.
+Until you're not sure what's real anymore.
+
+Play alone. Play at night.
+Don't look too closely at your old bases.
+'''
+
+[[dependencies.falsememory]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.falsememory]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.1,1.22)"
+    ordering="NONE"
+    side="BOTH"

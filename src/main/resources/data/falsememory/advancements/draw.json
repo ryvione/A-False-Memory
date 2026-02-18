@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": {"id": "minecraft:tnt"},
+    "title": {"text": "Neither Of You Were Real"},
+    "description": {"text": "You and The Only One died simultaneously."},
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "falsememory:only_one_summoned",
+  "criteria": {
+    "trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

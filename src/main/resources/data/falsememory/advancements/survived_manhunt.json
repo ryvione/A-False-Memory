@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": {"id": "minecraft:iron_boots"},
+    "title": {"text": "Still Running"},
+    "description": {"text": "Survived 3 days in Manhunt Mode."},
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "parent": "falsememory:only_one_summoned",
+  "criteria": {
+    "trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

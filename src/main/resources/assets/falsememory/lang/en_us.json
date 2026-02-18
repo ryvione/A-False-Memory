@@ -1,0 +1,31 @@
+{
+  "entity.falsememory.the_obsessed": "The Obsessed",
+  
+  "falsememory.sanity.it_sees_you": "it sees you",
+  
+  "falsememory.ritual.complete": "The memory fades.",
+  "falsememory.ritual.failed": "It knows what you're doing.",
+  
+  "falsememory.event.whisper": "You hear your own voice whispering",
+  "falsememory.event.wrong_home": "This isn't where you left it",
+  "falsememory.event.statue": "It was just standing there",
+  "falsememory.event.echo": "You've been here before",
+  "falsememory.event.inventory_ghost": "Something moved in your inventory",
+  "falsememory.event.chat_echo": "Did you say that twice?",
+  "falsememory.event.facing": "Why are you facing that way?",
+  
+  "falsememory.configuration.title": "A False Memory",
+  "falsememory.configuration.intensity": "Horror Intensity",
+  "falsememory.configuration.frequency": "Event Frequency",
+  "falsememory.configuration.enableSanityEffects": "Enable Sanity Effects",
+  "falsememory.configuration.enableTheObsessed": "Enable The Obsessed Entity",
+  "falsememory.configuration.debugMode": "Debug Mode",
+
+  "entity.falsememory.the_obsessed": "The Obsessed",
+  "entity.falsememory.the_only_one": "The Only One",
+  "entity.falsememory.the_witness": "The Witness",
+  "item.falsememory.memory_fragment": "Memory Fragment",
+  "item.falsememory.memory_core": "Memory Core",
+  "item.falsememory.summoning_book": "Summoning Book"
+
+}
