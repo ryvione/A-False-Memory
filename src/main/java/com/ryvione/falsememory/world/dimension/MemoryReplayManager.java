@@ -25,8 +25,8 @@ public class MemoryReplayManager {
     private final Queue<BlockPlacementEvent> placementQueue = new LinkedList<>();
     private final Queue<MovementSnapshot> movementSnapshots = new LinkedList<>();
 
-    private static final int REPLAY_SPEED = 2; 
-    private static final int MEMORY_FADE_DURATION = 600; 
+    private static final int REPLAY_SPEED = 2;
+    private static final int MEMORY_FADE_DURATION = 600;
 
     public MemoryReplayManager(ServerPlayer player, PlayerMemory memory, ServerLevel lostMemoriesLevel) {
         this.player = player;
@@ -35,15 +35,13 @@ public class MemoryReplayManager {
         this.reconstructReplay();
     }
 
-
     private void reconstructReplay() {
         LOGGER.info("[FalseMemory] Reconstructing memories for {}", player.getName().getString());
 
-        BlockPos firstBase = memory.firstLoginPos != null ? 
+        BlockPos firstBase = memory.firstLoginPos != null ?
             memory.firstLoginPos : new BlockPos(0, 64, 0);
 
         reconstructBaseStructure(firstBase);
-
         reconstructMovementPatterns();
 
         totalReplayTicks = placementQueue.size() * REPLAY_SPEED;
@@ -52,9 +50,7 @@ public class MemoryReplayManager {
         LOGGER.info("[FalseMemory] Replay reconstructed with {} block placements", placementQueue.size());
     }
 
-
     private void reconstructBaseStructure(BlockPos centerPos) {
-
         for (int x = -25; x < 25; x++) {
             for (int z = -25; z < 25; z++) {
                 BlockPos pos = centerPos.offset(x, 0, z);
@@ -66,7 +62,7 @@ public class MemoryReplayManager {
             try {
                 var block = net.minecraft.core.registries.BuiltInRegistries.BLOCK
                     .getOptional(net.minecraft.resources.ResourceLocation.parse(blockId));
-                
+
                 if (block.isPresent() && count > 0) {
                     int numToPlace = Math.min(count / 10, 20);
                     for (int i = 0; i < numToPlace; i++) {
@@ -74,8 +70,8 @@ public class MemoryReplayManager {
                         int ry = centerPos.getY() + 1;
                         int rz = centerPos.getZ() + (int)(Math.random() * 30 - 15);
                         BlockPos randomPos = new BlockPos(rx, ry, rz);
-                        
-                        if (lostMemoriesLevel.getBlockState(randomPos.below()).getMaterial().isSolid()) {
+
+                        if (lostMemoriesLevel.getBlockState(randomPos.below()).blocksMotion()) {
                             lostMemoriesLevel.setBlock(randomPos, block.get().defaultBlockState(), 3);
                         }
                     }
@@ -85,7 +81,6 @@ public class MemoryReplayManager {
 
         buildSimpleShelter(centerPos);
     }
-
 
     private void buildSimpleShelter(BlockPos pos) {
         for (int x = -3; x <= 3; x++) {
@@ -106,11 +101,10 @@ public class MemoryReplayManager {
         lostMemoriesLevel.setBlock(pos.offset(0, 1, -3), Blocks.OAK_DOOR.defaultBlockState(), 3);
     }
 
-
     private void reconstructMovementPatterns() {
         if (memory.loginPositions.isEmpty()) return;
 
-        BlockPos firstLogin = memory.firstLoginPos != null ? 
+        BlockPos firstLogin = memory.firstLoginPos != null ?
             memory.firstLoginPos : memory.loginPositions.get(0);
 
         for (int i = 0; i < Math.min(memory.loginPositions.size(), 10); i++) {
@@ -121,7 +115,6 @@ public class MemoryReplayManager {
             ));
         }
     }
-
 
     public void tick() {
         if (!isReplaying) return;
@@ -142,17 +135,16 @@ public class MemoryReplayManager {
         try {
             var blockOpt = net.minecraft.core.registries.BuiltInRegistries.BLOCK
                 .getOptional(net.minecraft.resources.ResourceLocation.parse(blockId));
-            
+
             blockOpt.ifPresent(block -> {
                 lostMemoriesLevel.setBlock(pos, block.defaultBlockState(), 3);
             });
         } catch (Exception ignored) {}
     }
 
-
     private void finishReplay() {
         isReplaying = false;
-        
+
         player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
             "§8It's been watching... since the very beginning."));
 
@@ -161,18 +153,19 @@ public class MemoryReplayManager {
             public void run() {
                 if (memory.inferredHomePos != null) {
                     player.teleportTo(
-                        (net.minecraft.server.level.ServerLevel) memory.inferredHomePos.getX() + 0.5,
+                        (ServerLevel) player.getServer().overworld(),
+                        memory.inferredHomePos.getX() + 0.5,
                         memory.inferredHomePos.getY() + 1,
-                        memory.inferredHomePos.getZ() + 0.5
+                        memory.inferredHomePos.getZ() + 0.5,
+                        0, 0
                     );
                 }
             }
-        }, 5000); 
+        }, 5000);
     }
 
     public boolean isReplaying() { return isReplaying; }
     public int getReplayProgress() { return (int)((float)replayTick / totalReplayTicks * 100); }
-
 
     private static class BlockPlacementEvent {
         BlockPos position;

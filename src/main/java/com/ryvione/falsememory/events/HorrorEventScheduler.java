@@ -113,7 +113,7 @@ public class HorrorEventScheduler {
             com.ryvione.falsememory.events.ManhuntManager.onLoginDuringManhunt(player, level, memory);
         }
 
-        PacketDistributor.sendToPlayer(player, new SanityPacket(memory.knowledgeTier, memory.inManhunt));
+        PacketDistributor.sendToPlayer(player, new SanityPacket(memory.knowledgeTier));
         mgr.markDirty(player.getUUID());
     }
 
@@ -156,7 +156,7 @@ public class HorrorEventScheduler {
 
             if (memory.knowledgeTier != oldTier) {
                 PacketDistributor.sendToPlayer(player,
-                    new SanityPacket(memory.knowledgeTier, memory.inManhunt));
+                    new SanityPacket(memory.knowledgeTier));
             }
         }
 

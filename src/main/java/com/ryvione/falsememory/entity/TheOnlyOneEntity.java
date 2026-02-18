@@ -125,9 +125,6 @@ public class TheOnlyOneEntity extends PathfinderMob {
         for (int i = 0; i < 4; i++) {
             var armor = player.getInventory().armor.get(i);
             if (!armor.isEmpty()) {
-                this.setItemSlot(net.minecraft.world.entity.EquipmentSlot.byTypeAndIndex(
-                    net.minecraft.world.entity.EquipmentSlot.Type.HUMANOID_ARMOR, i),
-                    armor.copy());
             }
         }
     }
@@ -330,9 +327,9 @@ public class TheOnlyOneEntity extends PathfinderMob {
     private void shootArrowAt(ServerPlayer player) {
         if (!(this.level() instanceof net.minecraft.server.level.ServerLevel serverLevel)) return;
 
-        var arrow = new net.minecraft.world.entity.projectile.Arrow(serverLevel, this,
-            serverLevel.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE));
-
+        net.minecraft.world.entity.projectile.Arrow arrow =
+            new net.minecraft.world.entity.projectile.Arrow(serverLevel, this, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), null);
+        arrow.setPos(this.getX(), this.getEyeY(), this.getZ());
         Vec3 dir = player.position().add(0, player.getBbHeight() * 0.5, 0)
             .subtract(this.position()).normalize();
         arrow.shoot(dir.x, dir.y, dir.z, 1.6f, 1.0f);

@@ -51,7 +51,7 @@ public class StructureReplicator {
                     BlockPos pos = center.offset(x, y, z);
                     var state = level.getBlockState(pos);
                     
-                    if (!state.getMaterial().isReplaceable() && state.getBlock() != Blocks.AIR) {
+                    if (!state.blocksMotion() && state.getBlock() != Blocks.AIR) {
                         String blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
                         
                         if (memory.blockPlacementCounts.containsKey(blockId) ||
@@ -126,7 +126,7 @@ public class StructureReplicator {
                                              triggerPos.getY() - trap.triggerPos.getY(),
                                              triggerPos.getZ() - trap.triggerPos.getZ());
             
-            if (level.getBlockState(newPos).getMaterial().isReplaceable()) {
+            if (level.getBlockState(newPos).blocksMotion()) {
                 level.setBlock(newPos, Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
             }
         }

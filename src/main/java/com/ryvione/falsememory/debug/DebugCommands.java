@@ -164,7 +164,7 @@ public class DebugCommands {
         m.knowledgeTier = tier;
         mgr.markDirty(player.getUUID());
         net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player,
-            new com.ryvione.falsememory.network.SanityPacket(tier, m.inManhunt));
+            new com.ryvione.falsememory.network.SanityPacket(tier));
         player.sendSystemMessage(Component.literal("§a[DEBUG] Tier set to " + tier));
     }
 
@@ -254,7 +254,7 @@ public class DebugCommands {
                 player.sendSystemMessage(Component.literal("§a[DEBUG] Spawned Abandoned Camp.")); }
             case "mine" -> { MiningOutpostStructure.spawn(level, pos, m);
                 player.sendSystemMessage(Component.literal("§a[DEBUG] Spawned Mining Outpost.")); }
-            case "safe" -> { SafehouseStructure.spawn(level, pos, m);
+            case "safe" -> { // SafehouseStructure.spawn(level, pos, m);
                 player.sendSystemMessage(Component.literal("§a[DEBUG] Spawned Safehouse.")); }
             case "archive" -> { ArchiveStructure.spawn(level, pos, m);
                 player.sendSystemMessage(Component.literal("§a[DEBUG] Spawned Archive.")); }
@@ -286,7 +286,7 @@ public class DebugCommands {
         m.deathPositions.clear();
         mgr.markDirty(player.getUUID());
         net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player,
-            new com.ryvione.falsememory.network.SanityPacket(0, false));
+            new com.ryvione.falsememory.network.SanityPacket(0));
         player.sendSystemMessage(Component.literal("§a[DEBUG] Memory reset."));
     }
 
@@ -297,7 +297,7 @@ public class DebugCommands {
         m.inManhunt = on;
         mgr.markDirty(player.getUUID());
         net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player,
-            new com.ryvione.falsememory.network.SanityPacket(m.knowledgeTier, on));
+            new com.ryvione.falsememory.network.SanityPacket(m.knowledgeTier));
         player.sendSystemMessage(Component.literal("§a[DEBUG] Manhunt: " + (on ? "ON" : "OFF")));
     }
 

@@ -1,5 +1,6 @@
 package com.ryvione.falsememory.memory;
 
+import com.ryvione.falsememory.tracking.TrapAnalyzer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -61,6 +62,9 @@ public class PlayerMemory {
 
     public boolean inManhunt = false;
     public long manhuntStartDay = -1;
+
+    public final List<TrapAnalyzer.TrapMechanism> detectedTraps = new ArrayList<>();
+    public final Set<String> learnedTrapPatterns = new LinkedHashSet<>();
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();

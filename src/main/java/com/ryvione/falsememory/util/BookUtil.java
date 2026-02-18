@@ -22,7 +22,9 @@ public class BookUtil {
             pages.add(StringTag.valueOf(pageJson(raw)));
         }
         tag.put("pages", pages);
-        book.setTag(tag);
+        book.applyComponents(net.minecraft.core.component.DataComponentPatch.builder()
+            .set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+                net.minecraft.world.item.component.CustomData.of(tag)).build());
         return book;
     }
 

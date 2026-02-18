@@ -20,7 +20,7 @@ public class ClientEvents {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    @EventBusSubscriber(modid = FalseMemory.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = FalseMemory.MOD_ID, value = Dist.CLIENT)
     public static class ModBusEvents {
 
         @SubscribeEvent
@@ -40,7 +40,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderGuiPost(RenderGuiEvent.Post event) {
-        SanityEffects.renderOverlay(event.getGuiGraphics(), event.getPartialTick());
+        SanityEffects.renderOverlay(event.getGuiGraphics(), event.getPartialTick().getGameTimeDeltaPartialTick(true));
     }
 
     @SubscribeEvent

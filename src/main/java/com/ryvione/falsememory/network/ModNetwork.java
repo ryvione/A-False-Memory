@@ -18,20 +18,4 @@ public class ModNetwork {
         registrar.playToClient(EndingPacket.TYPE, EndingPacket.STREAM_CODEC, EndingPacket::handle);
         registrar.playToClient(StructureSpawnPacket.TYPE, StructureSpawnPacket.STREAM_CODEC, StructureSpawnPacket::handle);
     }
-
-    private static void onRegisterPayloads(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(FalseMemory.MOD_ID);
-
-        registrar.playToClient(
-            SanityPacket.TYPE,
-            SanityPacket.STREAM_CODEC,
-            SanityPacket::handle
-        );
-
-        registrar.playToClient(
-            HorrorEventPacket.TYPE,
-            HorrorEventPacket.STREAM_CODEC,
-            HorrorEventPacket::handle
-        );
-    }
 }

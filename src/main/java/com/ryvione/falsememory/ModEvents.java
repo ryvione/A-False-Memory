@@ -13,8 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-import net.neoforged.neoforge.event.entity.living.LivingBedSleepingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -101,18 +100,6 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerSleep(LivingBedSleepingEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        MemoryManager mgr = MemoryManager.getInstance();
-        if (mgr == null) return;
-
-        PlayerMemory memory = mgr.getOrCreate(player);
-        memory.sleepCount++;
-        memory.preferredBedPos = event.getPos();
-        mgr.markDirty(player.getUUID());
-    }
-
-    @SubscribeEvent
     public static void onBlockBroken(BlockEvent.BreakEvent event) {
         if (!(event.getPlayer() instanceof ServerPlayer player)) return;
         MemoryManager mgr = MemoryManager.getInstance();
@@ -134,12 +121,12 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         MemoryManager mgr = MemoryManager.getInstance();
         if (mgr == null) return;
 
         PlayerMemory memory = mgr.getOrCreate(player);
-        CombatTracker.onPlayerHurt(player, memory, event.getSource(), event.getAmount());
+        CombatTracker.onPlayerHurt(player, memory, event.getSource(), event.getNewDamage());
     }
 }

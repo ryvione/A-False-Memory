@@ -208,13 +208,13 @@ public class HorrorEvents {
         }
 
         bookTag.put("pages", pages);
-        book.setTag(bookTag);
+        book.applyComponents(net.minecraft.core.component.DataComponentPatch.builder()
+            .set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+                net.minecraft.world.item.component.CustomData.of(bookTag)).build());
 
         if (!player.getInventory().add(book)) {
             player.drop(book, false);
         }
-        com.ryvione.falsememory.advancement.AdvancementTriggers.grant(player,
-        com.ryvione.falsememory.advancement.AdvancementTriggers.MEMORY_BOOK);
         memory.markTriggered("memory_book");
     }
 
@@ -250,7 +250,7 @@ public class HorrorEvents {
                 player.getUUID().toString().equals(obs.getTargetPlayerUUID())
         ).isEmpty();
 
-            if (!obsessedExists) {
+        if (!obsessedExists) {
             BlockPos home = memory.inferredHomePos;
             TheObsessedEntity obsessed = ModEntities.THE_OBSESSED.get().create(level);
             if (obsessed != null) {
@@ -408,7 +408,7 @@ public class HorrorEvents {
         playSoundForPlayer(player, "minecraft:entity.wither.ambient", SoundSource.HOSTILE, 0.5f, 0.3f);
     }
 
-    static void playSoundForPlayer(ServerPlayer player, String soundId, SoundSource source,
+    public static void playSoundForPlayer(ServerPlayer player, String soundId, SoundSource source,
                                     float volume, float pitch) {
         try {
             var soundEvent = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse(soundId));
@@ -426,7 +426,7 @@ public class HorrorEvents {
         }
     }
 
-    static void sendTitle(ServerPlayer player, String title, String subtitle,
+    public static void sendTitle(ServerPlayer player, String title, String subtitle,
                            int fadeIn, int stay, int fadeOut) {
         player.connection.send(new ClientboundSetTitlesAnimationPacket(fadeIn, stay, fadeOut));
         player.connection.send(new ClientboundSetTitleTextPacket(Component.literal(title)));

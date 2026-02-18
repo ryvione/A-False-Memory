@@ -1,4 +1,5 @@
 package com.ryvione.falsememory.advancement;
+import com.ryvione.falsememory.FalseMemory;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.advancements.AdvancementHolder;

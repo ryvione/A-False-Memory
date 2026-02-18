@@ -2,6 +2,7 @@ package com.ryvione.falsememory.tracking;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import java.util.*;
 
@@ -78,7 +79,7 @@ public class CombatAnalyzer {
             circleStrafesCount++;
         }
 
-        if (!current.mainhandItem.equals(previous.mainhandItem, false)) {
+        if (!ItemStack.isSameItemSameComponents(current.mainhandItem, previous.mainhandItem)) {
             weaponSwitchesCount++;
         }
 

@@ -23,7 +23,7 @@ public class ManhuntManager {
                                  TheOnlyOneEntity onlyOne, PlayerMemory memory) {
         memory.inManhunt = true;
         memory.manhuntStartDay = memory.worldDayCount;
-        PacketDistributor.sendToPlayer(player, new SanityPacket(memory.knowledgeTier, true));
+        PacketDistributor.sendToPlayer(player, new SanityPacket(memory.knowledgeTier));
         TitleUtil.send(player, "§4It's not over.", "§8Run.", 10, 60, 20);
         SoundUtil.playForPlayer(player, "minecraft:entity.wither.spawn", SoundSource.HOSTILE, 0.6f, 0.4f);
     }
@@ -64,6 +64,6 @@ public class ManhuntManager {
 
     public static void deactivate(ServerPlayer player, PlayerMemory memory) {
         memory.inManhunt = false;
-        PacketDistributor.sendToPlayer(player, new SanityPacket(memory.knowledgeTier, false));
+        PacketDistributor.sendToPlayer(player, new SanityPacket(memory.knowledgeTier));
     }
 }

@@ -14,60 +14,59 @@ import java.util.UUID;
 public class MemoryManager extends SavedData {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final String DATA_KEY = "falsememory_player_memories";
-    private final Map<UUID, PlayerMemory> memories = new HashMap<>();
-    private static MemoryManager instance = null;
+    private static final String DATA_NAME = "falsememory_player_data";
+    private static MemoryManager INSTANCE = null;
 
-    public static MemoryManager get(DimensionDataStorage storage) {
-        instance = storage.computeIfAbsent(
-            new SavedData.Factory<>(MemoryManager::new, MemoryManager::load),
-            DATA_KEY
-        );
-        return instance;
-    }
+    private final Map<UUID, PlayerMemory> memories = new HashMap<>();
 
     public static MemoryManager getInstance() {
-        return instance;
+        return INSTANCE;
+    }
+
+    public static MemoryManager get(DimensionDataStorage storage) {
+        INSTANCE = storage.computeIfAbsent(
+            new SavedData.Factory<MemoryManager>(MemoryManager::new, MemoryManager::loadFromTag, null),
+            DATA_NAME
+        );
+        return INSTANCE;
+    }
+
+    private static MemoryManager loadFromTag(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        MemoryManager mgr = new MemoryManager();
+        CompoundTag playersTag = tag.getCompound("players");
+        for (String key : playersTag.getAllKeys()) {
+            try {
+                UUID uuid = UUID.fromString(key);
+                PlayerMemory memory = PlayerMemory.load(playersTag.getCompound(key));
+                mgr.memories.put(uuid, memory);
+            } catch (Exception e) {
+                LOGGER.warn("[FalseMemory] Failed to load memory for {}: {}", key, e.getMessage());
+            }
+        }
+        return mgr;
+    }
+
+    @Override
+    public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        CompoundTag playersTag = new CompoundTag();
+        memories.forEach((uuid, memory) -> {
+            try {
+                playersTag.put(uuid.toString(), memory.save());
+            } catch (Exception e) {
+                LOGGER.warn("[FalseMemory] Failed to save memory for {}: {}", uuid, e.getMessage());
+            }
+        });
+        tag.put("players", playersTag);
+        return tag;
     }
 
     public PlayerMemory getOrCreate(ServerPlayer player) {
         return memories.computeIfAbsent(player.getUUID(), uuid -> {
-            LOGGER.info("[FalseMemory] Creating new memory for: {}", player.getName().getString());
-            return new PlayerMemory();
+            PlayerMemory memory = new PlayerMemory();
+            memory.firstLoginPos = player.blockPosition();
+            LOGGER.info("[FalseMemory] Created new memory for {}", player.getName().getString());
+            return memory;
         });
-    }
-
-    public PlayerMemory get(UUID uuid) {
-        return memories.get(uuid);
-    }
-
-    public boolean hasMemory(UUID uuid) {
-        return memories.containsKey(uuid);
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag compound) {
-        CompoundTag allMemories = new CompoundTag();
-        for (Map.Entry<UUID, PlayerMemory> entry : memories.entrySet()) {
-            allMemories.put(entry.getKey().toString(), entry.getValue().save());
-        }
-        compound.put("memories", allMemories);
-        return compound;
-    }
-
-    public static MemoryManager load(CompoundTag compound) {
-        MemoryManager manager = new MemoryManager();
-        CompoundTag allMemories = compound.getCompound("memories");
-        for (String key : allMemories.getAllKeys()) {
-            try {
-                UUID uuid = UUID.fromString(key);
-                PlayerMemory memory = PlayerMemory.load(allMemories.getCompound(key));
-                manager.memories.put(uuid, memory);
-            } catch (Exception e) {
-                LOGGER.error("[FalseMemory] Failed to load memory for: {}", key, e);
-            }
-        }
-        return manager;
     }
 
     public void markDirty(UUID uuid) {

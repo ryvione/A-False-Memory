@@ -96,12 +96,14 @@ public class SanityEffects {
         int w = mc.getWindow().getGuiScaledWidth();
         int h = mc.getWindow().getGuiScaledHeight();
 
-        if (invertFrames > 0) { SanityOverlay.renderInvert(graphics, w, h); return; }
-        if (vignetteAlpha > 0.01f) SanityOverlay.renderVignette(graphics, w, h, vignetteAlpha);
-        if (staticFramesRemaining > 0) SanityOverlay.renderStatic(graphics, w, h);
-        if (watchedOverlayTimer > 0 && currentTier >= 3)
-            WatchedTextOverlay.render(graphics, w, h, watchedOverlayTimer);
-        if (inManhunt) ManhuntOverlay.render(graphics, w, h);
+        if (invertFrames > 0) {
+            renderInvert(graphics, w, h);
+            return;
+        }
+        if (vignetteAlpha > 0.01f) renderVignette(graphics, w, h, vignetteAlpha);
+        if (staticFramesRemaining > 0) renderStatic(graphics, w, h);
+        if (watchedOverlayTimer > 0 && currentTier >= 3) renderWatchedText(graphics, w, h);
+        if (inManhunt) renderManhuntBorder(graphics, w, h);
     }
 
     private static void renderVignette(GuiGraphics graphics, int w, int h, float alpha) {

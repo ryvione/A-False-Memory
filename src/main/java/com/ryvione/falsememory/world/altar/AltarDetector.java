@@ -30,7 +30,9 @@ public class AltarDetector {
             if (be instanceof net.minecraft.world.level.block.entity.LecternBlockEntity lectern) {
                 var book = lectern.getBook();
                 if (book.getItem() instanceof WrittenBookItem) {
-                    String title = book.getTag() != null ? book.getTag().getString("title") : "";
+                    var customData = book.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+                    var tag = customData != null ? customData.copyTag() : null;
+                    String title = tag != null ? tag.getString("title") : "";
                     return title.equals(player.getName().getString());
                 }
             }
@@ -48,9 +50,9 @@ public class AltarDetector {
 
         if (!memory.deathPositions.isEmpty()) {
             BlockPos death = memory.deathPositions.get(0);
-            return level.getBlockState(pos).isSolid();
+            return level.getBlockState(pos).blocksMotion();
         }
 
-        return level.getBlockState(pos).isSolid();
+        return level.getBlockState(pos).blocksMotion();
     }
 }

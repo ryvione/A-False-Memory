@@ -1,8 +1,12 @@
 package com.ryvione.falsememory.tracking;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.Level;
 import com.ryvione.falsememory.memory.PlayerMemory;
 
@@ -55,7 +59,7 @@ public class TrapAnalyzer {
         BlockPos above = pos.above();
         BlockPos below = pos.below();
 
-        if (level.getBlockState(below).getMaterial().isSolid()) {
+        if (level.getBlockState(below).blocksMotion()) {
             trap.affectedBlocks.add(below);
         }
 
@@ -76,8 +80,9 @@ public class TrapAnalyzer {
         TrapMechanism trap = new TrapMechanism(pos, "piston");
 
         BlockState state = level.getBlockState(pos);
-        if (state.getBlock() instanceof PistonBaseBlock) {
-            trap.affectedBlocks.add(pos.relative(state.getValue(PistonBaseBlock.FACING)));
+        if (state.getBlock() instanceof PistonBaseBlock pistonBase) {
+            Direction dir = state.getValue(BlockStateProperties.FACING);
+            trap.affectedBlocks.add(pos.relative(dir));
             trap.complexity = 2;
         }
 
@@ -88,7 +93,7 @@ public class TrapAnalyzer {
         TrapMechanism trap = new TrapMechanism(pos, "redstone");
 
         BlockState state = level.getBlockState(pos);
-        if (state.getBlock() instanceof RedstoneWireBlock) {
+        if (state.getBlock() instanceof RedStoneWireBlock) {
             trap.complexity = 3;
             findRedstoneConnections(level, pos, trap, 0);
         }
@@ -117,8 +122,9 @@ public class TrapAnalyzer {
         TrapMechanism trap = new TrapMechanism(pos, "door");
 
         BlockState state = level.getBlockState(pos);
-        if (state.getBlock() instanceof DoorBlock) {
-            BlockPos other = pos.relative(((DoorBlock)state.getBlock()).getHalf(state) == DoubleBlockHalf.UPPER ? Direction.DOWN : Direction.UP);
+        if (state.getBlock() instanceof DoorBlock doorBlock) {
+            boolean isUpper = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER;
+            BlockPos other = isUpper ? pos.below() : pos.above();
             trap.affectedBlocks.add(other);
             trap.complexity = 1;
         }
@@ -150,7 +156,7 @@ public class TrapAnalyzer {
 
     private static boolean isRedstoneComponent(BlockState state) {
         Block block = state.getBlock();
-        return block instanceof RedstoneWireBlock ||
+        return block instanceof RedStoneWireBlock ||
                block instanceof RepeaterBlock ||
                block instanceof ComparatorBlock ||
                block instanceof TargetBlock;
