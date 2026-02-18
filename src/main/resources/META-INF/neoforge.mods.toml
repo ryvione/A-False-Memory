@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
     modId="falsememory"
-    version="1.0.0"
+    version="EALPHA-1.0"
     displayName="A False Memory"
     description='''
 Your world remembers everything you've done.
@@ -28,6 +28,6 @@ Don't look too closely at your old bases.
 [[dependencies.falsememory]]
     modId="minecraft"
     type="required"
-    versionRange="[1.21.1,1.22)"
+    versionRange="[1.21.1)"
     ordering="NONE"
     side="BOTH"
