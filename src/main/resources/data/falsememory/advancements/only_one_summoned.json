@@ -1,17 +1,12 @@
 {
+  "parent": "falsememory:ritual_complete",
   "display": {
-    "icon": {"id": "minecraft:diamond_sword"},
-    "title": {"text": "Face Yourself"},
-    "description": {"text": "You summoned The Only One."},
-    "frame": "challenge",
+    "icon": { "id": "minecraft:player_head" },
+    "title": { "text": "The Only One" },
+    "description": { "text": "It's here. It looks like you." },
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": true
   },
-  "parent": "falsememory:root",
-  "criteria": {
-    "trigger": {
-      "trigger": "minecraft:impossible"
-    }
-  }
+  "criteria": { "trigger": { "trigger": "minecraft:impossible" } }
 }

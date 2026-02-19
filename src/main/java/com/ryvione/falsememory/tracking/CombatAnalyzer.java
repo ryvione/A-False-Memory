@@ -6,7 +6,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import java.util.*;
 
-
 public class CombatAnalyzer {
 
     private final ServerPlayer player;
@@ -60,7 +59,6 @@ public class CombatAnalyzer {
         analyzeCurrentPattern();
     }
 
-
     private void analyzeCurrentPattern() {
         if (recentSnapshots.size() < 3) return;
 
@@ -92,7 +90,6 @@ public class CombatAnalyzer {
         }
     }
 
-
     private boolean isCircleStrafing() {
         if (recentSnapshots.size() < 5) return false;
 
@@ -113,7 +110,6 @@ public class CombatAnalyzer {
         return "sword";
     }
 
-   
     public CombatStrategy getSuggestedStrategy() {
         if (sprintAttackCount > 5) {
             return CombatStrategy.RANGED_KITE;
@@ -134,7 +130,6 @@ public class CombatAnalyzer {
         return CombatStrategy.ADAPTIVE;
     }
 
-
     public Vec3 predictPlayerMovement(int ticksAhead) {
         if (recentSnapshots.size() < 3) return player.position();
 
@@ -144,7 +139,6 @@ public class CombatAnalyzer {
         Vec3 velocity = current.position.subtract(old.position).scale(1.0 / Math.max(1, recentSnapshots.size() - 10));
         return current.position.add(velocity.scale(ticksAhead));
     }
-
 
     public boolean isCurrentlyFleeing() {
         if (recentSnapshots.size() < 5) return false;
@@ -160,11 +154,9 @@ public class CombatAnalyzer {
             .orElse(20.0);
     }
 
-
     public int getCombatDuration() {
         return recentSnapshots.size();
     }
-
 
     public CombatSnapshot getCurrentSnapshot() {
         return recentSnapshots.isEmpty() ? null : recentSnapshots.getLast();
@@ -186,7 +178,6 @@ public class CombatAnalyzer {
         totalDistanceTraveled = 0.0;
     }
 
-
     public int getSprintAttackCount() { return sprintAttackCount; }
     public int getStandsGroundCount() { return standsGroundCount; }
     public int getCircleStrafesCount() { return circleStrafesCount; }
@@ -195,7 +186,6 @@ public class CombatAnalyzer {
     public double getTotalDistanceTraveled() { return totalDistanceTraveled; }
     public double getAverageDistance() { return avgDistanceToTarget; }
     public double getMaxDistanceReached() { return maxDistanceReached; }
-
 
     public static class CombatSnapshot {
         public final Vec3 position;

@@ -4,7 +4,7 @@ plugins {
 }
 
 version = 'A-1.0'
-group = 'com.ryvione'
+group   = 'com.ryvione'
 
 base {
     archivesName = 'falsememory'
@@ -18,7 +18,7 @@ neoForge {
     version = project.neo_version
 
     parchment {
-        mappingsVersion = project.parchment_mappings_version
+        mappingsVersion  = project.parchment_mappings_version
         minecraftVersion = project.parchment_minecraft_version
     }
 
@@ -27,18 +27,15 @@ neoForge {
             client()
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
-
         server {
             server()
             programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
-
         gameTestServer {
             type = 'gameTestServer'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
-
         data {
             data()
             programArguments.addAll '--mod', project.mod_id, '--all',
@@ -57,12 +54,13 @@ neoForge {
 repositories {
     maven {
         name = 'Cloth Config'
-        url = 'https://maven.shedaniel.me/'
+        url  = 'https://maven.shedaniel.me/'
     }
 }
 
 dependencies {
-    // implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
+    compileOnly "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
+    runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
 }
 
 tasks.withType(JavaCompile).configureEach {

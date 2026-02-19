@@ -38,7 +38,7 @@ public class StructureSpawnManager {
         if (phase >= 3 && !memory.wasTriggeredToday("struct_safe")) {
             if (memory.loginPositions.size() >= 3) {
                 BlockPos oldLogin = memory.loginPositions.get(0);
-                // SafehouseStructure.spawn(level, oldLogin, memory);
+                
                 memory.markTriggered("struct_safe");
             }
         }

@@ -1,17 +1,13 @@
 {
+  "parent": "falsememory:only_one_summoned",
   "display": {
-    "icon": {"id": "minecraft:nether_star"},
-    "title": {"text": "It's Over"},
-    "description": {"text": "You defeated The Only One."},
+    "icon": { "id": "minecraft:totem_of_undying" },
+    "title": { "text": "Victory" },
+    "description": { "text": "You killed it. For now." },
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": true
   },
-  "parent": "falsememory:only_one_summoned",
-  "criteria": {
-    "trigger": {
-      "trigger": "minecraft:impossible"
-    }
-  }
+  "criteria": { "trigger": { "trigger": "minecraft:impossible" } }
 }

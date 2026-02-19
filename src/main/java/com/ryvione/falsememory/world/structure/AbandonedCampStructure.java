@@ -18,39 +18,39 @@ public class AbandonedCampStructure {
     public static void spawn(ServerLevel level, BlockPos origin, PlayerMemory memory) {
         StructureBuilder b = new StructureBuilder(level, origin);
 
-        b.hollow(-2, 0, -2, 2, 3, 2,
-            Blocks.COBBLESTONE.defaultBlockState(),
-            Blocks.AIR.defaultBlockState());
+        b.fill(-3, 0, -3, 3, 0, 3, Blocks.DIRT.defaultBlockState());
+        b.fill(-2, 0, -2, 2, 0, 2, Blocks.GRASS_BLOCK.defaultBlockState());
 
-        b.set(0, 3, 0, Blocks.AIR.defaultBlockState());
-        b.set(1, 2, 0, Blocks.GLASS_PANE.defaultBlockState());
-        b.set(-1, 2, 0, Blocks.GLASS_PANE.defaultBlockState());
+        b.set(0, 0, 0, Blocks.CAMPFIRE.defaultBlockState());
 
-        b.set(0, 0, 2, Blocks.AIR.defaultBlockState());
-        b.set(0, 1, 2, Blocks.AIR.defaultBlockState());
+        b.set(-2, 0, 0, Blocks.OAK_LOG.defaultBlockState());
+        b.set(-1, 0, 0, Blocks.OAK_WOOD.defaultBlockState());
+        b.set(2, 0, 0, Blocks.OAK_LOG.defaultBlockState());
+        b.set(1, 0, 0, Blocks.OAK_WOOD.defaultBlockState());
 
-        b.set(-1, 1, -1, Blocks.CRAFTING_TABLE.defaultBlockState());
-        b.set(1, 1, -1, Blocks.FURNACE.defaultBlockState());
+        b.set(-2, 1, 0, Blocks.DRIED_KELP_BLOCK.defaultBlockState());
+        b.set(2, 1, 0, Blocks.DRIED_KELP_BLOCK.defaultBlockState());
 
-        BlockPos bedPos = b.at(0, 1, 1);
-        level.setBlock(bedPos, Blocks.RED_BED.defaultBlockState()
-            .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH), 3);
+        b.set(0, 1, -2, Blocks.SPRUCE_LOG.defaultBlockState());
+        b.set(0, 2, -2, Blocks.SPRUCE_LOG.defaultBlockState());
 
-        BlockPos torchPos1 = b.at(-2, 2, 0);
-        BlockPos torchPos2 = b.at(2, 2, 0);
-        level.setBlock(torchPos1, Blocks.WALL_TORCH.defaultBlockState()
-            .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST), 3);
-        level.setBlock(torchPos2, Blocks.WALL_TORCH.defaultBlockState()
-            .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST), 3);
+        b.set(-1, 1, -2, Blocks.WHITE_WOOL.defaultBlockState());
+        b.set(1, 1, -2, Blocks.DEEPSLATE_TILE_SLAB.defaultBlockState());
 
-        BlockPos chestPos = b.at(0, 1, -1);
+        BlockPos chestPos = b.at(0, 0, -2);
         level.setBlock(chestPos, Blocks.CHEST.defaultBlockState(), 3);
         var chestBE = level.getBlockEntity(chestPos);
         if (chestBE instanceof ChestBlockEntity chest) {
             ItemStack journal = JournalGenerator.generateAbandonedCampJournal(memory);
             chest.setItem(0, journal);
-            chest.setItem(1, new ItemStack(net.minecraft.world.item.Items.BREAD, 2));
-            chest.setItem(2, new ItemStack(net.minecraft.world.item.Items.APPLE, 1));
+            chest.setItem(1, new ItemStack(net.minecraft.world.item.Items.BONE, 3));
+            chest.setItem(2, new ItemStack(net.minecraft.world.item.Items.ROTTEN_FLESH, 2));
         }
+
+        b.set(2, 0, -2, Blocks.LANTERN.defaultBlockState());
+        b.set(-2, 0, 2, Blocks.LANTERN.defaultBlockState());
+
+        b.set(-1, 0, 2, Blocks.DARK_OAK_LOG.defaultBlockState());
+        b.set(1, 0, 2, Blocks.DARK_OAK_LOG.defaultBlockState());
     }
 }

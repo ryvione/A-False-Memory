@@ -18,11 +18,9 @@ public class VictoryEnding {
         if (memory != null && !memory.chatHistory.isEmpty()) {
             finalWords = memory.chatHistory.get(RNG.nextInt(memory.chatHistory.size()));
         }
-        if (memory != null) {
-            com.ryvione.falsememory.advancement.AdvancementTriggers.grant(player,
-                com.ryvione.falsememory.advancement.AdvancementTriggers.ONLY_ONE_DEFEATED);
-        }
-        
+
+        com.ryvione.falsememory.advancement.AdvancementTriggers.grant(player,
+            com.ryvione.falsememory.advancement.AdvancementTriggers.ONLY_ONE_DEFEATED);
 
         player.sendSystemMessage(Component.literal("§8\"" + finalWords + "\""));
         player.sendSystemMessage(Component.literal("§8silence"));
@@ -33,11 +31,11 @@ public class VictoryEnding {
             SoundSource.HOSTILE, 0.3f, 0.6f);
 
         if (memory != null) {
+            memory.falseVictoryDay = memory.worldDayCount;
             memory.inManhunt = false;
             memory.knowledgeTier = 0;
-            memory.triggeredEvents.clear();
-            memory.totalDeaths = 0;
-            memory.deathPositions.clear();
+
+            memory.triggeredEvents.removeIf(e -> !e.startsWith("victory_reset"));
         }
     }
 }

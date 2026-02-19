@@ -1,6 +1,9 @@
 package com.ryvione.falsememory.memory;
 
 import com.ryvione.falsememory.tracking.TrapAnalyzer;
+import com.ryvione.falsememory.ai.PlayerProfile;
+import com.ryvione.falsememory.ai.PlayerHeatmap;
+import com.ryvione.falsememory.ai.AggressivityLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,6 +27,21 @@ public class PlayerMemory {
     public final List<String> lastHotbarSnapshot = new ArrayList<>();
     public final Map<String, Integer> blockPlacementCounts = new LinkedHashMap<>();
     public final Map<String, Integer> blockBreakCounts = new LinkedHashMap<>();
+
+    public final int[] miningYHistogram = new int[320];
+
+    public void recordBlockBrokenAt(BlockPos pos) {
+        int idx = pos.getY() + 64;
+        if (idx >= 0 && idx < 320) miningYHistogram[idx]++;
+    }
+
+    public int getMostCommonMiningY() {
+        int best = 128; 
+        for (int i = 1; i < 320; i++) {
+            if (miningYHistogram[i] > miningYHistogram[best]) best = i;
+        }
+        return best - 64;
+    }
 
     public final List<BlockPos> deathPositions = new ArrayList<>();
     public String lastDeathCause = null;
@@ -62,9 +80,14 @@ public class PlayerMemory {
 
     public boolean inManhunt = false;
     public long manhuntStartDay = -1;
+    public long falseVictoryDay = -1;
 
     public final List<TrapAnalyzer.TrapMechanism> detectedTraps = new ArrayList<>();
     public final Set<String> learnedTrapPatterns = new LinkedHashSet<>();
+
+    public final PlayerProfile playerProfile = new PlayerProfile();
+    public final PlayerHeatmap heatmap = new PlayerHeatmap();
+    public final AggressivityLevel aggressivity = new AggressivityLevel();
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
@@ -90,6 +113,8 @@ public class PlayerMemory {
         tag.putLong("averageInventoryCheckInterval", averageInventoryCheckInterval);
         tag.putBoolean("inManhunt", inManhunt);
         tag.putLong("manhuntStartDay", manhuntStartDay);
+        tag.putLong("falseVictoryDay", falseVictoryDay);
+        tag.putIntArray("miningYHistogram", miningYHistogram);
 
         if (lastDeathCause != null) tag.putString("lastDeathCause", lastDeathCause);
         if (mostFrequentBiome != null) tag.putString("mostFrequentBiome", mostFrequentBiome);
@@ -123,6 +148,10 @@ public class PlayerMemory {
         for (String e : triggeredEvents) eventList.add(StringTag.valueOf(e));
         tag.put("triggeredEvents", eventList);
 
+        tag.put("playerProfile", playerProfile.save());
+        tag.put("heatmap", heatmap.save());
+        tag.put("aggressivity", aggressivity.save());
+        
         CompoundTag craftTag = new CompoundTag();
         for (Map.Entry<String, Integer> e : craftedItems.entrySet()) craftTag.putInt(e.getKey(), e.getValue());
         tag.put("craftedItems", craftTag);
@@ -174,9 +203,14 @@ public class PlayerMemory {
         m.totalCombatEvents = tag.getInt("totalCombatEvents");
         m.totalCombatTicks = tag.getLong("totalCombatTicks");
         m.totalInventoryChecks = tag.getLong("totalInventoryChecks");
+        if (tag.contains("miningYHistogram")) {
+            int[] saved = tag.getIntArray("miningYHistogram");
+            System.arraycopy(saved, 0, m.miningYHistogram, 0, Math.min(saved.length, 320));
+        }
         m.averageInventoryCheckInterval = tag.getLong("averageInventoryCheckInterval");
         m.inManhunt = tag.getBoolean("inManhunt");
         m.manhuntStartDay = tag.getLong("manhuntStartDay");
+        m.falseVictoryDay = tag.getLong("falseVictoryDay");
 
         if (tag.contains("preferredWeaponType")) m.preferredWeaponType = tag.getString("preferredWeaponType");
         if (tag.contains("lastDeathCause")) m.lastDeathCause = tag.getString("lastDeathCause");
@@ -228,6 +262,10 @@ public class PlayerMemory {
 
         ListTag hotbarList = tag.getList("lastHotbarSnapshot", Tag.TAG_STRING);
         for (int i = 0; i < hotbarList.size(); i++) m.lastHotbarSnapshot.add(hotbarList.getString(i));
+
+        if (tag.contains("playerProfile")) m.playerProfile.load(tag.getCompound("playerProfile"));
+        if (tag.contains("heatmap")) m.heatmap.load(tag.getCompound("heatmap"));
+        if (tag.contains("aggressivity")) m.aggressivity.load(tag.getCompound("aggressivity"));
 
         return m;
     }
@@ -320,10 +358,35 @@ public class PlayerMemory {
         if (!weaponUseCounts.isEmpty()) score++;
 
         knowledgeTier = Math.min(3, score / 3);
+
+        int totalBroken = blockBreakCounts.values().stream().mapToInt(i -> i).sum();
+        int totalPlaced = blockPlacementCounts.values().stream().mapToInt(i -> i).sum();
+        playerProfile.updateProfile(totalBroken, totalPlaced, visitedBiomes.size(), combatsStoodGround);
+        aggressivity.update((int) worldDayCount, triggeredEvents.size(), totalDeaths);
     }
 
     public boolean wasTriggeredToday(String eventId) {
         return triggeredEvents.contains(eventId + "_day" + worldDayCount);
+    }
+
+    public boolean wasTriggeredTodayTimes(String eventId, int maxTimes) {
+        for (int i = 0; i < maxTimes; i++) {
+            if (!triggeredEvents.contains(eventId + "_day" + worldDayCount + "_" + i)) return false;
+        }
+        return true;
+    }
+
+    public void markTriggeredIndexed(String eventId, int index) {
+        triggeredEvents.add(eventId + "_day" + worldDayCount + "_" + index);
+        lastEventDay = worldDayCount;
+    }
+
+    public int countTriggeredToday(String eventId, int maxTimes) {
+        int count = 0;
+        for (int i = 0; i < maxTimes; i++) {
+            if (triggeredEvents.contains(eventId + "_day" + worldDayCount + "_" + i)) count++;
+        }
+        return count;
     }
 
     public void markTriggered(String eventId) {

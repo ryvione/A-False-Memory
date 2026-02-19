@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 
 import java.util.*;
 
-
 public class MemoryReplayManager {
     private static final Logger LOGGER = LogUtils.getLogger();
 

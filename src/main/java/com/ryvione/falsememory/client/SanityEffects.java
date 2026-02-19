@@ -1,6 +1,5 @@
 package com.ryvione.falsememory.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -107,26 +106,22 @@ public class SanityEffects {
     }
 
     private static void renderVignette(GuiGraphics graphics, int w, int h, float alpha) {
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         int a = (int)(alpha * 255);
         graphics.fill(0, 0, w, (int)(h * 0.18f), (a << 24));
         graphics.fill(0, (int)(h * 0.82f), w, h, (a << 24));
         graphics.fill(0, 0, (int)(w * 0.12f), h, (a << 24));
         graphics.fill((int)(w * 0.88f), 0, w, h, (a << 24));
-        RenderSystem.disableBlend();
     }
 
     private static void renderStatic(GuiGraphics graphics, int w, int h) {
-        RenderSystem.enableBlend();
         for (int i = 0; i < 250; i++) {
             int x = RNG.nextInt(w);
             int y = RNG.nextInt(h);
             int gray = 80 + RNG.nextInt(175);
             int alpha = 20 + RNG.nextInt(80);
-            graphics.fill(x, y, x + 1, y + 1, (alpha << 24) | (gray << 16) | (gray << 8) | gray);
+            graphics.fill(x, y, x + 1, y + 1,
+                (alpha << 24) | (gray << 16) | (gray << 8) | gray);
         }
-        RenderSystem.disableBlend();
     }
 
     private static void renderWatchedText(GuiGraphics graphics, int w, int h) {
@@ -142,7 +137,6 @@ public class SanityEffects {
     }
 
     private static void renderManhuntBorder(GuiGraphics graphics, int w, int h) {
-        RenderSystem.enableBlend();
         int pulse = (int)(Math.abs(Math.sin(System.currentTimeMillis() * 0.002)) * 80) + 20;
         int color = (pulse << 24) | 0x660000;
         int thickness = 6;
@@ -150,13 +144,10 @@ public class SanityEffects {
         graphics.fill(0, h - thickness, w, h, color);
         graphics.fill(0, 0, thickness, h, color);
         graphics.fill(w - thickness, 0, w, h, color);
-        RenderSystem.disableBlend();
     }
 
     private static void renderInvert(GuiGraphics graphics, int w, int h) {
-        RenderSystem.enableBlend();
         graphics.fill(0, 0, w, h, 0xFFFFFFFF);
-        RenderSystem.disableBlend();
     }
 
     public static float getCameraShakeX() {
@@ -187,6 +178,12 @@ public class SanityEffects {
     }
 
     public static void setTier(int tier) {
+        if (tier != currentTier) {
+            vignetteAlpha = 0f;
+            staticFramesRemaining = 0;
+            shakeFramesRemaining = 0;
+            watchedOverlayTimer = 0;
+        }
         currentTier = tier;
     }
 

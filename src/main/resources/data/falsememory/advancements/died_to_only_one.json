@@ -1,17 +1,13 @@
 {
+  "parent": "falsememory:only_one_summoned",
   "display": {
-    "icon": {"id": "minecraft:skeleton_skull"},
-    "title": {"text": "It Already Knows"},
-    "description": {"text": "You died to The Only One."},
-    "frame": "task",
+    "icon": { "id": "minecraft:bone" },
+    "title": { "text": "Defeat" },
+    "description": { "text": "It remembered everything you taught it." },
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": true
   },
-  "parent": "falsememory:only_one_summoned",
-  "criteria": {
-    "trigger": {
-      "trigger": "minecraft:impossible"
-    }
-  }
+  "criteria": { "trigger": { "trigger": "minecraft:impossible" } }
 }

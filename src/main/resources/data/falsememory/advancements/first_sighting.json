@@ -1,17 +1,12 @@
 {
+  "parent": "falsememory:root",
   "display": {
-    "icon": {"id": "minecraft:ender_eye"},
-    "title": {"text": "Not Alone"},
-    "description": {"text": "You saw it for the first time."},
-    "frame": "task",
+    "icon": { "id": "minecraft:ender_eye" },
+    "title": { "text": "It Sees You" },
+    "description": { "text": "Something noticed you." },
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": true
   },
-  "parent": "falsememory:root",
-  "criteria": {
-    "trigger": {
-      "trigger": "minecraft:impossible"
-    }
-  }
+  "criteria": { "trigger": { "trigger": "minecraft:impossible" } }
 }

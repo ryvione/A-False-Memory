@@ -25,13 +25,14 @@ public class MemoryManager extends SavedData {
 
     public static MemoryManager get(DimensionDataStorage storage) {
         INSTANCE = storage.computeIfAbsent(
-            new SavedData.Factory<MemoryManager>(MemoryManager::new, MemoryManager::loadFromTag, null),
+            new SavedData.Factory<>(MemoryManager::new, MemoryManager::loadFromTag, null),
             DATA_NAME
         );
         return INSTANCE;
     }
 
-    private static MemoryManager loadFromTag(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+    private static MemoryManager loadFromTag(CompoundTag tag,
+            net.minecraft.core.HolderLookup.Provider registries) {
         MemoryManager mgr = new MemoryManager();
         CompoundTag playersTag = tag.getCompound("players");
         for (String key : playersTag.getAllKeys()) {
@@ -47,7 +48,8 @@ public class MemoryManager extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+    public CompoundTag save(CompoundTag tag,
+            net.minecraft.core.HolderLookup.Provider registries) {
         CompoundTag playersTag = new CompoundTag();
         memories.forEach((uuid, memory) -> {
             try {
@@ -67,6 +69,17 @@ public class MemoryManager extends SavedData {
             LOGGER.info("[FalseMemory] Created new memory for {}", player.getName().getString());
             return memory;
         });
+    }
+
+    public PlayerMemory getOrCreate(UUID uuid) {
+        return memories.computeIfAbsent(uuid, k -> {
+            LOGGER.info("[FalseMemory] Created bare memory for UUID {}", uuid);
+            return new PlayerMemory();
+        });
+    }
+
+    public PlayerMemory getMemory(UUID uuid) {
+        return memories.get(uuid);
     }
 
     public void markDirty(UUID uuid) {

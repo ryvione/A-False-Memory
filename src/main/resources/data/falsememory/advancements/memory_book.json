@@ -1,17 +1,12 @@
 {
+  "parent": "falsememory:root",
   "display": {
-    "icon": {"id": "minecraft:book"},
-    "title": {"text": "It Remembers"},
-    "description": {"text": "The book appeared in your inventory."},
-    "frame": "task",
+    "icon": { "id": "minecraft:written_book" },
+    "title": { "text": "Observations" },
+    "description": { "text": "A book appeared in your inventory. You did not put it there." },
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": true
   },
-  "parent": "falsememory:root",
-  "criteria": {
-    "trigger": {
-      "trigger": "minecraft:impossible"
-    }
-  }
+  "criteria": { "trigger": { "trigger": "minecraft:impossible" } }
 }

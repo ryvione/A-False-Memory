@@ -36,29 +36,12 @@ public class FalseMemory {
     }
 
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
-    event.put(ModEntities.THE_OBSESSED.get(),
-        Mob.createMobAttributes()
-            .add(Attributes.MAX_HEALTH, 200.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.25)
-            .add(Attributes.FOLLOW_RANGE, 80.0)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
-            .build()
-    );
-    event.put(ModEntities.THE_WITNESS.get(),
-        Mob.createMobAttributes()
-            .add(Attributes.MAX_HEALTH, 200.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.0)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
-            .build()
-    );
-    event.put(ModEntities.THE_ONLY_ONE.get(),
-        Mob.createMobAttributes()
-            .add(Attributes.MAX_HEALTH, 20.0)
-            .add(Attributes.MOVEMENT_SPEED, 0.3)
-            .add(Attributes.FOLLOW_RANGE, 128.0)
-            .add(Attributes.ATTACK_DAMAGE, 4.0)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
-            .build()
-    );
-}
+        
+        event.put(ModEntities.THE_OBSESSED.get(),
+            com.ryvione.falsememory.entity.TheObsessedEntity.createAttributes().build());
+        event.put(ModEntities.THE_WITNESS.get(),
+            com.ryvione.falsememory.entity.TheWitnessEntity.createAttributes().build());
+        event.put(ModEntities.THE_ONLY_ONE.get(),
+            com.ryvione.falsememory.entity.TheOnlyOneEntity.createAttributes().build());
+    }
 }
